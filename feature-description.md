@@ -41,3 +41,11 @@ It handles everything about a user in the system. A user has fields like name, e
 
 
 
+## Resume Service
+
+Enables the user to upload their resume, and get the resume based on the user id.
+
+- To upload a resume, it gets the user id, and the resume file.
+- It verifies wheter the file is less than 5MB, and of type pdf or document.
+- It reads the data, and responds with all the fields.
+- It also returns with the resume file, based on the user id.
