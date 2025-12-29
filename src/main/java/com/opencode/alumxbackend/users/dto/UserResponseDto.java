@@ -4,7 +4,6 @@ import com.opencode.alumxbackend.users.model.UserRole;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.opencode.alumxbackend.common.exception.Errors.BadRequestException;
-import com.opencode.alumxbackend.common.exception.Errors.ResourceNotFoundException;
 import com.opencode.alumxbackend.users.dto.UserProfileDTO;
 import com.opencode.alumxbackend.users.dto.UserProfileUpdateRequestDto;
 import com.opencode.alumxbackend.users.dto.UserRequest;

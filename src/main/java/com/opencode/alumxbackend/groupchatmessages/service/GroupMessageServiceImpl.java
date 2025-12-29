@@ -38,7 +38,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
 
 
         if (!isMember) {
-            throw new UserNotMemberException("the userID :"+ request.getUserId() + " is not a member of This Group");
+            throw new UserNotMemberException(request.getUserId());
         }
 
         if (request.getContent() == null || request.getContent().trim().isEmpty()) {
