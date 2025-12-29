@@ -1,6 +1,7 @@
 package com.opencode.alumxbackend.users.controller;
 
 import com.opencode.alumxbackend.users.dto.UserProfileDTO;
+import com.opencode.alumxbackend.users.dto.UserProfileUpdateRequestDto;
 import com.opencode.alumxbackend.users.dto.UserRequest;
 import com.opencode.alumxbackend.users.model.User;
 
@@ -54,5 +55,14 @@ public class UserController {
         catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PatchMapping("/{userId}/profile")
+    public ResponseEntity<UserProfileDTO> updateUserProfile(
+            @PathVariable Long userId,
+            @RequestBody UserProfileUpdateRequestDto request
+    ) {
+        UserProfileDTO updatedUser = userService.updateUserProfile(userId, request);
+        return ResponseEntity.ok(updatedUser);
     }
 }

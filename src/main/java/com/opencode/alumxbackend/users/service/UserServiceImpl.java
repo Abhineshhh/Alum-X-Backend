@@ -1,7 +1,9 @@
 package com.opencode.alumxbackend.users.service;
 
 import com.opencode.alumxbackend.common.exception.Errors.BadRequestException;
+import com.opencode.alumxbackend.common.exception.Errors.ResourceNotFoundException;
 import com.opencode.alumxbackend.users.dto.UserProfileDTO;
+import com.opencode.alumxbackend.users.dto.UserProfileUpdateRequestDto;
 import com.opencode.alumxbackend.users.dto.UserRequest;
 import com.opencode.alumxbackend.users.model.User;
 import com.opencode.alumxbackend.users.model.UserRole;
@@ -71,34 +73,127 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return mapToProfileDTO(user);
-
-        // return userRepository.findById(id)
-        // .map(user -> new UserProfileDTO(
-        // user.getId(),
-        // user.getUsername(),
-        // user.getName(),
-        // user.getEmail(),
-        // user.getSkills(),
-        // user.getEducation(),
-        // user.getTechStack()
-
-        // ));
     }
 
     private UserProfileDTO mapToProfileDTO(User user) {
         return UserProfileDTO.builder()
+                // Identity
                 .id(user.getId())
                 .username(user.getUsername())
                 .name(user.getName())
                 .email(user.getEmail())
+
+                // Professional summary
+                .about(user.getAbout())
+                .currentCompany(user.getCurrentCompany())
+                .currentRole(user.getCurrentRole())
+                .location(user.getLocation())
+
+                // Links
+                .linkedinUrl(user.getLinkedinUrl())
+                .githubUrl(user.getGithubUrl())
+                .portfolioUrl(user.getPortfolioUrl())
+
+                // Skills & background
                 .skills(copy(user.getSkills()))
                 .education(copy(user.getEducation()))
                 .techStack(copy(user.getTechStack()))
+                .frameworks(copy(user.getFrameworks()))
+                .languages(copy(user.getLanguages()))
+                .communicationSkills(copy(user.getCommunicationSkills()))
+                .softSkills(copy(user.getSoftSkills()))
+
+                // Experience
+                .experience(copy(user.getExperience()))
+                .internships(copy(user.getInternships()))
+                .projects(copy(user.getProjects()))
+                .certifications(copy(user.getCertifications()))
+
+                // Personal
+                .hobbies(copy(user.getHobbies()))
+
+                // Status
+                .profileCompleted(user.isProfileCompleted())
                 .build();
     }
+
 
     private List<String> copy(List<String> list) {
         return list == null ? List.of() : List.copyOf(list);
     }
 
+    public UserProfileDTO updateUserProfile(Long userId, UserProfileUpdateRequestDto request){
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Basic
+        if (request.getName() != null)
+            user.setName(request.getName());
+
+        // Professional summary
+        if (request.getAbout() != null)
+            user.setAbout(request.getAbout());
+
+        if (request.getCurrentCompany() != null)
+            user.setCurrentCompany(request.getCurrentCompany());
+
+        if (request.getCurrentRole() != null)
+            user.setCurrentRole(request.getCurrentRole());
+
+        if (request.getLocation() != null)
+            user.setLocation(request.getLocation());
+
+        // Links
+        if (request.getLinkedinUrl() != null)
+            user.setLinkedinUrl(request.getLinkedinUrl());
+
+        if (request.getGithubUrl() != null)
+            user.setGithubUrl(request.getGithubUrl());
+
+        if (request.getPortfolioUrl() != null)
+            user.setPortfolioUrl(request.getPortfolioUrl());
+
+        // Skills & background
+        if (request.getSkills() != null)
+            user.setSkills(request.getSkills());
+
+        if (request.getEducation() != null)
+            user.setEducation(request.getEducation());
+
+        if (request.getTechStack() != null)
+            user.setTechStack(request.getTechStack());
+
+        if (request.getFrameworks() != null)
+            user.setFrameworks(request.getFrameworks());
+
+        if (request.getLanguages() != null)
+            user.setLanguages(request.getLanguages());
+
+        if (request.getCommunicationSkills() != null)
+            user.setCommunicationSkills(request.getCommunicationSkills());
+
+        if (request.getSoftSkills() != null)
+            user.setSoftSkills(request.getSoftSkills());
+
+        // Experience
+        if (request.getExperience() != null)
+            user.setExperience(request.getExperience());
+
+        if (request.getInternships() != null)
+            user.setInternships(request.getInternships());
+
+        if (request.getProjects() != null)
+            user.setProjects(request.getProjects());
+
+        if (request.getCertifications() != null)
+            user.setCertifications(request.getCertifications());
+
+        // Personal
+        if (request.getHobbies() != null)
+            user.setHobbies(request.getHobbies());
+
+        User updatedUser = userRepository.save(user);
+        return mapToProfileDTO(updatedUser);
+    }
 }
