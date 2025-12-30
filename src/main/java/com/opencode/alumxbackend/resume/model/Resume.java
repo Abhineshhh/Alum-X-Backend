@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @Builder
 public class Resume {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false)
     private String fileName;

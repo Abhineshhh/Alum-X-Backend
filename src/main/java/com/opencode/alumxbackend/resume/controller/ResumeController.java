@@ -18,7 +18,7 @@ public class ResumeController {
 
     @PostMapping
     public ResponseEntity<?> uploadResume(
-            @RequestParam String userId,
+            @RequestParam Long userId,
             @RequestParam MultipartFile file
     ) throws Exception {
         resumeService.uploadResume(userId, file);
@@ -26,7 +26,7 @@ public class ResumeController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Void> fetchResume(@PathVariable String userId) {
+    public ResponseEntity<Void> fetchResume(@PathVariable Long userId) {
 
         Resume resume = resumeService.getResumeByUserId(userId);
 

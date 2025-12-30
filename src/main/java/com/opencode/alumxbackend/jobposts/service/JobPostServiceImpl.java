@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import com.opencode.alumxbackend.jobposts.dto.CommentRequest;
 import com.opencode.alumxbackend.jobposts.model.JobPostComment;
@@ -44,7 +43,7 @@ public class JobPostServiceImpl implements JobPostService{
         return JobPostResponse.fromEntities(posts);
     }
 
-    public void addComment(String postId, Long userId, CommentRequest request) {
+    public void addComment(Long postId, Long userId, CommentRequest request) {
         JobPost post = jobPostRepository.findById(postId)
                 .orElseThrow(()->new ResourceNotFoundException("job post not found"));
 
@@ -64,7 +63,7 @@ public class JobPostServiceImpl implements JobPostService{
 
 
     @Override
-    public void likePost(String postId, Long userId) {
+    public void likePost(Long postId, Long userId) {
         // 1. Check if post exists and retrieve it
         JobPost post = jobPostRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with postId: " + postId));
@@ -115,7 +114,6 @@ public class JobPostServiceImpl implements JobPostService{
             });
         }
         JobPost jobPost = JobPost.builder()
-                .postId(UUID.randomUUID().toString())
                 .username(request.getUsername())
                 .description(request.getDescription())
                 .imageUrls(request.getImageUrls())
@@ -127,7 +125,7 @@ public class JobPostServiceImpl implements JobPostService{
     }
 
     @Override
-    public void deletePostByUser(Long userId, String postId) {
+    public void deletePostByUser(Long userId, Long postId) {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with the id " + userId));
 

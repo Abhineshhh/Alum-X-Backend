@@ -4,7 +4,6 @@ import com.opencode.alumxbackend.groupchat.dto.GroupChatRequest;
 import com.opencode.alumxbackend.groupchat.model.GroupChat;
 import com.opencode.alumxbackend.groupchat.model.Participant;
 import com.opencode.alumxbackend.groupchat.repository.GroupChatRepository;
-import com.opencode.alumxbackend.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GroupChatServiceImpl implements  GroupChatService {
     private final GroupChatRepository repository;
-    private final UserRepository userRepository;
+    // private final UserRepository userRepository;
 
     @Override
     public GroupChat createGroup(GroupChatRequest request) {
@@ -28,10 +27,10 @@ public class GroupChatServiceImpl implements  GroupChatService {
         List<Participant> participants = request.getParticipants().stream()
                 .map(p -> {
 
-                    var existingParticipant = userRepository.findById(p.getUserId())
-                            .orElseThrow(()-> new RuntimeException(
-                                    "User with ID " + p.getUserId() + "does not exits "
-                            ));
+                    // var existingParticipant = userRepository.findById(p.getUserId())
+                    //         .orElseThrow(()-> new RuntimeException(
+                    //                 "User with ID " + p.getUserId() + "does not exits "
+                    //         ));
                     Participant participant = new Participant();
                     participant.setUserId(p.getUserId());
                     participant.setUsername(p.getUsername());
@@ -55,7 +54,7 @@ public class GroupChatServiceImpl implements  GroupChatService {
 
 
     @Override
-    public List<GroupChat> getGroupsForUser(String userId) {
+    public List<GroupChat> getGroupsForUser(Long userId) {
         return repository.findGroupsByUserId(userId);
     }
 }

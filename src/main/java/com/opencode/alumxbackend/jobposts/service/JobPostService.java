@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface JobPostService {
     JobPost createJobPost(JobPostRequest request);
-    void deletePostByUser(Long userId, String postId);
+    void deletePostByUser(Long userId, Long postId);
     List<JobPostResponse> getPostsByUser(Long userId);
-    void addComment(String postId, Long userId, CommentRequest request);
+    void addComment(Long postId, Long userId, CommentRequest request);
 
-    void likePost(String postId, Long userId);
+    void likePost(Long postId, Long userId);
 }

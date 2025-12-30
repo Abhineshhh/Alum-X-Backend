@@ -58,7 +58,6 @@ class JobPostControllerIntegrationTest {
     @DisplayName("GET /api/users/{userId}/posts - returns 200 OK with posts list")
     void getPostsByUser_ReturnsOkWithPosts() {
         JobPost post = JobPost.builder()
-                .postId("integration-post-1")
                 .username(testUser.getUsername())
                 .description("Integration test job post description content")
                 .createdAt(LocalDateTime.now())
@@ -106,14 +105,12 @@ class JobPostControllerIntegrationTest {
     @DisplayName("GET /api/users/{userId}/posts - returns multiple posts")
     void getPostsByUser_ReturnsMultiplePosts() {
         JobPost post1 = JobPost.builder()
-                .postId("post-1")
                 .username(testUser.getUsername())
                 .description("First post description for testing")
                 .createdAt(LocalDateTime.now().minusDays(2))
                 .build();
         
         JobPost post2 = JobPost.builder()
-                .postId("post-2")
                 .username(testUser.getUsername())
                 .description("Second post description for testing")
                 .createdAt(LocalDateTime.now())

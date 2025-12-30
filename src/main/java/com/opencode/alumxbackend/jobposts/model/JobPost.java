@@ -17,11 +17,15 @@ import java.util.List;
 public class JobPost {
     @Id
     @Column(name = "post_id")
-    private String postId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long postId;
+
     @Column(nullable = false)
     private String username;
+    
     @Column(length = 5000)
     private String description;
+    
     @ElementCollection
     @CollectionTable(name = "job_post_images", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "image_url")
@@ -29,6 +33,7 @@ public class JobPost {
 
     @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobPostComment> comments;
+    
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 }

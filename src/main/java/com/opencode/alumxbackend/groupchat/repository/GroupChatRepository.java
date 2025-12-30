@@ -9,5 +9,5 @@ import java.util.List;
 public interface GroupChatRepository extends JpaRepository<GroupChat, Long> {
 
     @Query("SELECT g FROM GroupChat g JOIN g.participants p WHERE p.userId = :userId")
-    List<GroupChat> findGroupsByUserId(@Param("userId") String userId);
+    List<GroupChat> findGroupsByUserId(@Param("userId") Long userId);
 }

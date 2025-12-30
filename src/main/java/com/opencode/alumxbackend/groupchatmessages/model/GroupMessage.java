@@ -2,9 +2,7 @@ package com.opencode.alumxbackend.groupchatmessages.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "group_messages")

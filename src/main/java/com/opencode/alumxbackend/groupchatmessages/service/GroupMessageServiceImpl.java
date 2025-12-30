@@ -13,7 +13,6 @@ import com.opencode.alumxbackend.groupchat.repository.GroupChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
 
 
         if (!isMember) {
-            throw new UserNotMemberException("the userID :"+ request.getUserId() + " is not a member of This Group");
+            throw new UserNotMemberException(request.getUserId());
         }
 
         if (request.getContent() == null || request.getContent().trim().isEmpty()) {

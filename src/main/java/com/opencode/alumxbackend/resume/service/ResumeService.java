@@ -21,7 +21,7 @@ public class ResumeService {
     @Value("${resume.upload.dir}")
     private String uploadDir;
 
-    public void uploadResume(String userId, MultipartFile file) throws Exception {
+    public void uploadResume(Long userId, MultipartFile file) throws Exception {
 
         if (file.getSize() > 5 * 1024 * 1024) {
             throw new InvalidResumeException("File size must be less than 5MB");
@@ -58,7 +58,7 @@ public class ResumeService {
         resumeRepository.save(resume);
     }
 
-    public Resume getResumeByUserId(String userId) {
+    public Resume getResumeByUserId(Long userId) {
         return resumeRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResumeNotFoundException("Resume not found"));
     }

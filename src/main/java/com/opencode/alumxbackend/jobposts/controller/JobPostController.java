@@ -52,7 +52,7 @@ public class JobPostController {
 
     @PostMapping("/jobs/{postId}/like")
     public ResponseEntity<?> likePost(
-            @PathVariable String postId,
+            @PathVariable Long postId,
             @RequestParam Long userId
     ) {
         jobPostService.likePost(postId, userId);

@@ -1,4 +1,4 @@
-package com.opencode.alumxbackend.chat;
+package com.opencode.alumxbackend.chat.model;
 
 import java.time.LocalDateTime;
 
@@ -38,8 +38,6 @@ public class Message {
     private Long messageID;
 
 
-
-
     // we cant store the Entire object in the row this is the instace wer we
     // join the table
     //here it is going to match the primary key of the Chat table
@@ -49,6 +47,8 @@ public class Message {
 
 
     @Column(nullable = false)
+    private Long senderId;
+    @Column(name = "sender_username", nullable = false)
     private String senderUsername;
     // make sure this username used here always exists in the DB before processing the query
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -57,21 +57,17 @@ public class Message {
     private LocalDateTime createdAt;
 
     /**
-     * Derives the receiver username from the associated Chat and senderUsername.
+     * Derives the receiver id from the associated Chat and sender id.
      * This value is not persisted to avoid redundancy.
      */
     @Transient
-    public String getReceiverUsername() {
-        if (chat == null || senderUsername == null) {
-            return null;
+    public Long getReceiverId() {
+        if (senderId.equals(chat.getUser1Id())) {
+            return chat.getUser2Id();
         }
-        if (senderUsername.equals(chat.getUser1Username())) {
-            return chat.getUser2Username();
-        } else if (senderUsername.equals(chat.getUser2Username())) {
-            return chat.getUser1Username();
-        }
-        return null;
+        return chat.getUser1Id();
     }
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
