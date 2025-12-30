@@ -53,7 +53,7 @@ public class ResumeService {
                 .fileType(contentType)
                 .fileUrl(filePath)
                 .uploadedAt(LocalDateTime.now())
-                .build();
+                .isActive(true).isDeleted(true).build();
 
         resumeRepository.save(resume);
     }
