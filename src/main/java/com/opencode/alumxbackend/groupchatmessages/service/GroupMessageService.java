@@ -2,6 +2,7 @@ package com.opencode.alumxbackend.groupchatmessages.service;
 
 import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageResponse;
 import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageSearchRequest;
+import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageSearchResponse;
 import com.opencode.alumxbackend.groupchatmessages.dto.SendGroupMessageRequest;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface GroupMessageService {
     );
     List<GroupMessageResponse> getAllGroupMessages(Long groupId);
 
-    List<GroupMessageResponse> searchForMessage(Long groupId, Long userId, GroupMessageSearchRequest request);
+    GroupMessageSearchResponse searchForMessage(Long groupId, Long userId, GroupMessageSearchRequest request);
 
 
 }
