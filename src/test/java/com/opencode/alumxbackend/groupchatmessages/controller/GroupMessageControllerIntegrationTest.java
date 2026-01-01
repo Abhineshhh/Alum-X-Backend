@@ -374,30 +374,18 @@ class GroupMessageControllerIntegrationTest {
     @Test
     @DisplayName("GET /api/groups/{groupId}/messages - should order messages by timestamp ascending")
     void getPaginatedMessages_OrdersByTimestamp_Ascending() {
-        // Create 3 messages with slight delays
+        // Create 3 messages sequentially
         SendGroupMessageRequest msg1 = new SendGroupMessageRequest();
         msg1.setUserId(testUser1.getId());
         msg1.setContent("First message");
         webClient.post().uri("/api/groups/" + testGroupId + "/messages")
                 .bodyValue(msg1).retrieve().bodyToMono(GroupMessageResponse.class).block();
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
         SendGroupMessageRequest msg2 = new SendGroupMessageRequest();
         msg2.setUserId(testUser2.getId());
         msg2.setContent("Second message");
         webClient.post().uri("/api/groups/" + testGroupId + "/messages")
                 .bodyValue(msg2).retrieve().bodyToMono(GroupMessageResponse.class).block();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
 
         SendGroupMessageRequest msg3 = new SendGroupMessageRequest();
         msg3.setUserId(testUser1.getId());
@@ -452,8 +440,8 @@ class GroupMessageControllerIntegrationTest {
                     .bodyToMono(String.class)
                     .block();
         } catch (Exception e) {
-            // Should fail with 403 or 500 depending on exception handling
-            assertThat(e.getMessage()).containsAnyOf("403", "500");
+            // Should return 403 Forbidden for non-member access
+            assertThat(e.getMessage()).contains("403");
         }
     }
 
@@ -505,8 +493,8 @@ class GroupMessageControllerIntegrationTest {
             // Should not reach here
             throw new AssertionError("Expected exception for negative page number");
         } catch (Exception e) {
-            // Spring Data throws IllegalArgumentException which results in 500
-            assertThat(e.getMessage()).contains("500");
+            // Should return 400 Bad Request for invalid pagination parameters
+            assertThat(e.getMessage()).contains("400");
         }
     }
 
@@ -524,8 +512,8 @@ class GroupMessageControllerIntegrationTest {
             // Should not reach here
             throw new AssertionError("Expected exception for invalid page size");
         } catch (Exception e) {
-            // Spring Data throws IllegalArgumentException which results in 500
-            assertThat(e.getMessage()).contains("500");
+            // Should return 400 Bad Request for invalid pagination parameters
+            assertThat(e.getMessage()).contains("400");
         }
     }
 

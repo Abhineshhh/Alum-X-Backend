@@ -17,6 +17,7 @@ import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageSearchRespons
 import com.opencode.alumxbackend.groupchatmessages.dto.SendGroupMessageRequest;
 import com.opencode.alumxbackend.groupchatmessages.exception.GroupNotFoundException;
 import com.opencode.alumxbackend.groupchatmessages.exception.InvalidMessageException;
+import com.opencode.alumxbackend.groupchatmessages.exception.InvalidRequestException;
 import com.opencode.alumxbackend.groupchatmessages.exception.UserNotMemberException;
 import com.opencode.alumxbackend.groupchatmessages.model.GroupMessage;
 import com.opencode.alumxbackend.groupchatmessages.repository.GroupMessageRepository;
@@ -106,10 +107,10 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     public Page<GroupMessageResponse> getGroupMessagesWithPagination(Long groupId, Long userId, int page, int size) {
         // Validate pagination parameters
         if (page < 0) {
-            throw new IllegalArgumentException("Page index must not be less than zero");
+            throw new InvalidRequestException("Page index must not be less than zero");
         }
         if (size < 1) {
-            throw new IllegalArgumentException("Page size must be greater than zero");
+            throw new InvalidRequestException("Page size must be greater than zero");
         }
         
         // Validate group exists
@@ -129,7 +130,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
 
         // Fetch paginated messages
-        Page<GroupMessage> messagePage = messageRepository.findByGroupIdOrderByCreatedAtAsc(groupId, pageable);
+        Page<GroupMessage> messagePage = messageRepository.findByGroupId(groupId, pageable);
 
         // Map to response DTOs
         return messagePage.map(this::mapToResponse);
