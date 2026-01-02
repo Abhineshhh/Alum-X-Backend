@@ -1,7 +1,6 @@
 package com.opencode.alumxbackend.search.controller;
 
 import com.opencode.alumxbackend.users.dto.UserResponseDto;
-import com.opencode.alumxbackend.users.model.User;
 import com.opencode.alumxbackend.search.service.UserSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
