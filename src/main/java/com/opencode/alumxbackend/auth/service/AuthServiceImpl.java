@@ -66,7 +66,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
-        // 1️⃣ Check uniqueness
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new BadRequestException("Email already exists: " + registerRequest.getEmail());
         }
@@ -75,7 +74,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Username already exists: " + registerRequest.getUsername());
         }
 
-        // 2️⃣ Validate role
         UserRole role;
         try {
             role = UserRole.valueOf(registerRequest.getRole().toUpperCase());
@@ -83,7 +81,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid role. Must be STUDENT, ALUMNI, or PROFESSOR.");
         }
 
-        // 3️⃣ Validate email format and password length
         if (!registerRequest.getEmail().matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(\\.[A-Za-z]{2,})?$")) {
             throw new BadRequestException("Invalid email format: " + registerRequest.getEmail());
         }
@@ -92,7 +89,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Password must be at least 6 characters");
         }
 
-        // 4️⃣ Create and save user
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .name(registerRequest.getName())
@@ -104,7 +100,6 @@ public class AuthServiceImpl implements AuthService {
 
         User savedUser = userRepository.save(user);
 
-        // 5️⃣ Build and return response
         return RegisterResponse.builder()
                 .userId(savedUser.getId())
                 .username(savedUser.getUsername())
