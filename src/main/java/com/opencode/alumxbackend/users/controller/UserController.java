@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.opencode.alumxbackend.users.dto.UserProfileDTO;
+import com.opencode.alumxbackend.users.dto.UserProfileResponse;
 import com.opencode.alumxbackend.users.dto.UserProfileUpdateRequestDto;
 import com.opencode.alumxbackend.users.dto.UserResponseDto;
 import com.opencode.alumxbackend.users.service.UserService;
@@ -28,7 +28,7 @@ public class UserController {
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     @GetMapping("/{userId}/profile")
-    public ResponseEntity<UserProfileDTO> getProfile(@PathVariable Long userId){
+    public ResponseEntity<UserProfileResponse> getProfile(@PathVariable Long userId){
         try {
             return ResponseEntity.ok(userService.getUserProfile(userId));
         }
@@ -45,11 +45,11 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/profile")
-    public ResponseEntity<UserProfileDTO> updateUserProfile(
+    public ResponseEntity<UserProfileResponse> updateUserProfile(
             @PathVariable Long userId,
             @RequestBody UserProfileUpdateRequestDto request
     ) {
-        UserProfileDTO updatedUser = userService.updateUserProfile(userId, request);
+        UserProfileResponse updatedUser = userService.updateUserProfile(userId, request);
         return ResponseEntity.ok(updatedUser);
     }
 }

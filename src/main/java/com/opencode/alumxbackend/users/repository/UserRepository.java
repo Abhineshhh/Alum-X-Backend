@@ -5,6 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
+
+
+///  every reposityr is tied a entity
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
