@@ -4,7 +4,7 @@ import com.opencode.alumxbackend.auth.security.UserPrincipal;
 import com.opencode.alumxbackend.groupchat.dto.GroupChatRequest;
 import com.opencode.alumxbackend.groupchat.model.GroupChat;
 import com.opencode.alumxbackend.groupchat.model.Participant;
-import com.opencode.alumxbackend.groupchat.model.Role;
+import com.opencode.alumxbackend.groupchat.model.ParticipantRole;
 import com.opencode.alumxbackend.groupchat.repository.GroupChatRepository;
 import com.opencode.alumxbackend.groupchat.repository.ParticipantRepository;
 import com.opencode.alumxbackend.users.model.User;
@@ -61,8 +61,8 @@ public class GroupChatServiceImpl implements  GroupChatService {
                             .userId(p.getUserId())
                             .username(p.getUsername())
                             .role(p.getUserId().equals(request.getOwnerId())
-                                    ? Role.OWNER
-                                    : Role.MEMBER)
+                                    ? ParticipantRole.OWNER
+                                    : ParticipantRole.MEMBER)
                             .groupChat(group)
                             .build();
 
@@ -108,8 +108,8 @@ public class GroupChatServiceImpl implements  GroupChatService {
                         new AccessDeniedException("You are not a member of this group")
                 );
 
-        if (requester.getRole() != Role.OWNER &&
-            requester.getRole() != Role.ADMIN) {
+        if (requester.getRole() != ParticipantRole.OWNER &&
+            requester.getRole() != ParticipantRole.ADMIN) {
             throw new AccessDeniedException("Only OWNER or ADMIN can add users");
         }
 
@@ -127,12 +127,61 @@ public class GroupChatServiceImpl implements  GroupChatService {
         Participant participant = Participant.builder()
                 .userId(userId)
                 .username(newMember.getUsername())
-                .role(Role.MEMBER)
+                .role(ParticipantRole.MEMBER)
                 .groupChat(group)
                 .build();
 
         group.getParticipants().add(participant);
 
         return repository.save(group);
+    }
+
+    
+    @Override
+    public GroupChat removeUserFromGroup(Long groupId, Long userId) {
+        // Get current user (from JWT)
+        UserPrincipal principal = (UserPrincipal)
+                SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        Long requesterId = principal.getId();
+
+        GroupChat group = repository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+
+        Participant requester = participantRepository
+                .findByGroupChat_GroupIdAndUserId(groupId, requesterId)
+                .orElseThrow(() ->
+                        new AccessDeniedException("You are not a member of this group")
+                );
+
+        if (requester.getRole() != ParticipantRole.OWNER &&
+            requester.getRole() != ParticipantRole.ADMIN) {
+            throw new AccessDeniedException("Only OWNER or ADMIN can remove users");
+        }
+
+        if (requesterId.equals(userId)) {
+            throw new RuntimeException("You cannot remove yourself from the group");
+        }
+
+        // Member to be removed
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        Participant participant = participantRepository.findByGroupChat_GroupIdAndUserId(groupId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not present in the group"));
+
+        // If the member to be removed is the owner
+        if (participant.getRole().equals(ParticipantRole.OWNER)) {
+            throw new RuntimeException("You cannot remove the owner from the group");
+        }
+
+        participantRepository.delete(participant);
+
+        group.getParticipants().removeIf(p -> p.getUserId().equals(userId));
+
+        return group;
     }
 }

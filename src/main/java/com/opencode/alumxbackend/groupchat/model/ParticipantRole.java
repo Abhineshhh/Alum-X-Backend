@@ -1,6 +1,6 @@
 package com.opencode.alumxbackend.groupchat.model;
 
-public enum Role {
+public enum ParticipantRole {
     OWNER,
     ADMIN,
     MEMBER

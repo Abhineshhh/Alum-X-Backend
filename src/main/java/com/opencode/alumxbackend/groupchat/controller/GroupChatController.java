@@ -59,12 +59,12 @@ public class GroupChatController {
     }
 
     // Remove user to group (admin/owner only)
-    // @PostMapping("/{groupId}/add-user/{userId}")
-    // public ResponseEntity<GroupChatResponse> removeUserFromGroup(@PathVariable Long groupId, @PathVariable Long userId) {
+    @PostMapping("/{groupId}/remove-user/{userId}")
+    public ResponseEntity<GroupChatResponse> removeUserFromGroup(@PathVariable Long groupId, @PathVariable Long userId) {
         
-    //     GroupChat updatedGroup = service.removeUserFromGroup(groupId, userId);
-    //     return ResponseEntity.ok(mapToResponse(updatedGroup));
-    // }
+        GroupChat updatedGroup = service.removeUserFromGroup(groupId, userId);
+        return ResponseEntity.ok(mapToResponse(updatedGroup));
+    }
 
     
 
