@@ -1,5 +1,6 @@
 package com.opencode.alumxbackend.connection.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,5 +53,57 @@ public class ConnectionServiceImpl implements ConnectionService {
                 .build();
 
         connectionRepository.save(connection);
+    }
+
+    @Override
+    public void acceptConnectionRequest(Long connectionId, Long userId) {
+        Connection connection = connectionRepository.findById(connectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Connection not found"));
+
+        if (!connection.getReceiverId().equals(userId)) {
+            throw new IllegalStateException("Only the receiver can accept this request");
+        }
+
+        if (connection.getStatus() != ConnectionStatus.PENDING) {
+            throw new IllegalStateException("Connection is already " + connection.getStatus().name().toLowerCase());
+        }
+
+        connection.setStatus(ConnectionStatus.ACCEPTED);
+        connectionRepository.save(connection);
+    }
+
+    @Override
+    public void rejectConnectionRequest(Long connectionId, Long userId) {
+        Connection connection = connectionRepository.findById(connectionId)
+                .orElseThrow(() -> new EntityNotFoundException("Connection not found"));
+
+        if (!connection.getReceiverId().equals(userId)) {
+            throw new IllegalStateException("Only the receiver can reject this request");
+        }
+
+        if (connection.getStatus() != ConnectionStatus.PENDING) {
+            throw new IllegalStateException("Connection is already " + connection.getStatus().name().toLowerCase());
+        }
+
+        connection.setStatus(ConnectionStatus.REJECTED);
+        connectionRepository.save(connection);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Connection> getPendingReceivedRequests(Long userId) {
+        return connectionRepository.findPendingRequestsForUser(userId, ConnectionStatus.PENDING);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Connection> getPendingSentRequests(Long userId) {
+        return connectionRepository.findSentRequestsByUser(userId, ConnectionStatus.PENDING);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Connection> getAcceptedConnections(Long userId) {
+        return connectionRepository.findByUserIdAndStatus(userId, ConnectionStatus.ACCEPTED);
     }
 }
